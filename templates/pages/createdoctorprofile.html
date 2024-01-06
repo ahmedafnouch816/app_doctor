@@ -1,0 +1,172 @@
+{% extends "basic.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        .form-inp{
+            width:100%;
+            padding:5px;
+        }
+    </style>
+    
+
+
+    <div class="bg-light py-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 mb-0">
+              <a href="/">Home</a> <span class="mx-2 mb-0">/</span>
+              <strong class="text-black">Profile</strong>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="site-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h2 class="h3 mb-5 text-black">Create Your Profile</h2>
+              
+            </div>
+            <div class="col-md-12">
+                <form method="POST" action="{% url 'create_doctor_profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" class="form-control" required><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="gender">Gender:</label>
+                            <select id="gender" name="gender" class="form-control" required>
+                                {% for choice in GENDER_CHOICES %}
+                                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select><br>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="specialization">Specialization:</label>
+                            <select id="specialization" name="specialization" class="form-control" required>
+                                {% for choice in SPECIALIZATION_CHOICES %}
+                                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="qualifications">Qualifications:</label>
+                            <input type="text" id="qualifications" name="qualifications" class="form-control" required><br>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="experience">Experience:</label>
+                            <input type="number" id="experience" name="experience" class="form-control" required><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contact_number">Contact Number:</label>
+                            <input type="text" id="contact_number" name="contact_number" class="form-control" required><br>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" required><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="address">Address:</label>
+                            <input type="text" id="locationInput"  class="form-control" required><br>
+                            <div id="suggestionList"></div>
+                        </div>
+                    </div>
+                    <input id="selectedLatitude" type="hidden" name="latitude">
+                    <input id="selectedLongitude" type="hidden" name="longitude">
+                    <input id="selectedAddress" type="hidden" name="address"> 
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="biography">Biography:</label>
+                            <textarea id="biography" name="biography" class="form-control" required></textarea><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="languages_spoken">Languages Spoken:</label>
+                            <input type="text" id="languages_spoken" name="languages_spoken" class="form-control" required><br>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="hospital_affiliations">Hospital Affiliations:</label>
+                            <input type="text" id="hospital_affiliations" name="hospital_affiliations" class="form-control" required><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="profile_pic">Profile Picture:</label>
+                            <input type="file" id="profile_pic" name="profile_pic" class="form-control" accept="image/*" required><br>
+                        </div>
+                    </div>
+                    
+                    <input type="submit" class="btn btn-primary" value="Create Profile">
+                </form>
+                
+                  
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Initialize the Places service
+        const placesService = new google.maps.places.PlacesService(document.createElement('div'));
+
+        // Set up the Autocomplete functionality for the input field
+        const input = document.getElementById('locationInput');
+        const autocomplete = new google.maps.places.Autocomplete(input);
+
+        // Handle the place_changed event when a user selects a location from the suggestions
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+
+            // Display the selected location's details
+            if (place.geometry && place.geometry.location) {
+                const latitude = place.geometry.location.lat();
+                const longitude = place.geometry.location.lng();
+                const address = place.formatted_address;
+
+                // Set the selected location details to the hidden input fields
+                document.getElementById('selectedLatitude').value = latitude;
+                document.getElementById('selectedLongitude').value = longitude;
+                document.getElementById('selectedAddress').value = address;
+
+                // Display the selected location details on the screen
+                document.getElementById('latitudeDisplay').textContent = latitude;
+                document.getElementById('longitudeDisplay').textContent = longitude;
+                document.getElementById('addressDisplay').textContent = address;
+
+                console.log(`Selected location: ${address}, Lat: ${latitude}, Lng: ${longitude}`);
+            }
+        });
+
+        // Optional: Display the suggestion list based on user input
+        const suggestionList = document.getElementById('suggestionList');
+        input.addEventListener('input', () => {
+            const query = input.value;
+
+            // Use the Places service to fetch predictions for the input value
+            placesService.getQueryPredictions({ input: query }, (predictions, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    const suggestions = predictions.map(prediction => prediction.description);
+                    const suggestionItems = suggestions.map(suggestion => `<div>${suggestion}</div>`);
+                    suggestionList.innerHTML = suggestionItems.join('');
+                } else {
+                    suggestionList.innerHTML = '';
+                }
+            });
+        });
+    </script>
+{% endblock content %}

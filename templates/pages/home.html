@@ -1,0 +1,301 @@
+{% extends "basic.html" %}
+{% load static %}
+{% block content %}
+<style>
+  .tabs {
+    display: flex;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    background-color: black;
+    
+    cursor: pointer;
+    color:white;
+  }
+
+  .tab.active {
+    background-color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+    border-top: 1px solid blue;
+  }
+
+  .content {
+    display: none;
+    margin-top: 10px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid blue;
+  }
+
+  .content.active {
+    display: block;
+  }
+</style>
+<div class="site-blocks-cover" style="background-image: url('{% static 'images/hero_1.jpg' %}');">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-7 mx-auto order-lg-2 align-self-center">
+          <div class="site-block-cover-content text-center">
+            <div class="tabs">
+              <div class="tab active" onclick="showContent(1)">By Speciality</div>
+              <div class="tab" onclick="showContent(2)">By Name</div>
+              {% comment %} <div class="tab" onclick="showContent(3)">Telehealth</div> {% endcomment %}
+            </div>
+            <div class="content active" id="content1">
+              <h3>
+                FIND AND BOOK HEALTH APPOINTMENTS, 24/7. <span style="color:blue">IT'S FREE!</span>
+              </h3>
+              
+              <form action="{% url 'filter_doctors' %}" method="GET">
+                <div class="search-container">
+                  <div class="select-option">
+                    <select name="speciality" class="w-100">
+                      <option value="">Speciality</option>
+                      {% for choice in specialization_choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="search-inp">
+                    <input type="text" name="location" id="locationInput" value="{{ location }}" placeholder="Enter Street Address">
+                    <div id="suggestionList"></div>
+                  </div>
+                  <div class="submit-button">
+                    <button type="submit">Submit</button>
+                  </div>
+                </div>
+              </form>
+              
+              
+              
+              
+            </div>
+
+            
+            <div class="content" id="content2">
+              <h3>
+                FIND AND BOOK HEALTH APPOINTMENTS, 24/7. <span style="color:blue">IT'S FREE!</span>
+              </h3>
+              <form action="{% url 'filter_doctors' %}" method="GET">
+                <div class="search-container">
+                  
+                  <div class="search-inp2">
+                    <input type="text" class="" name="doctor_name" placeholder="Search By Name ">
+                  </div>
+                  <div class="submit-button">
+                    <button type="submit">Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="content" id="content3">
+              <h3>
+                FIND AND BOOK A TELEHEALTH VIDEO CONSULTATION
+              </h3>
+              <form action="">
+                <div class="search-container">
+                  
+                  <div class="search-inp2">
+                    <input type="text" class="" placeholder="Name or Practice ">
+                  </div>
+                  <div class="submit-button">
+                    <button type="submit">Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+      <div class="row align-items-stretch section-overlap">
+        <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+          <div class="banner-wrap bg-primary h-100">
+            <a href="#" class="h-100">
+              <h5>Free <br> Booking</h5>
+              <p>
+                Amet sit amet dolor
+                <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+              </p>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+          <div class="banner-wrap h-100">
+            <a href="#" class="h-100">
+              <h5>Offer<br> 50% Off</h5>
+              <p>
+                Amet sit amet dolor
+                <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+              </p>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+          <div class="banner-wrap bg-warning h-100">
+            <a href="#" class="h-100">
+              <h5>Trusted <br> Doctors</h5>
+              <p>
+                Amet sit amet dolor
+                <strong>Lorem, ipsum dolor sit amet consectetur adipisicing.</strong>
+              </p>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+      <div class="row">
+        <div class="title-section text-center col-12">
+          <h2 class="text-uppercase">Testimonials</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 block-3 products-wrap">
+          <div class="nonloop-block-3 no-direction owl-carousel">
+      
+            <div class="testimony">
+              <blockquote>
+                <img src="{% static 'images/person_1.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
+                <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat unde.&rdquo;</p>
+              </blockquote>
+
+              <p>&mdash; Kelly Holmes</p>
+            </div>
+      
+            <div class="testimony">
+              <blockquote>
+                <img src="{% static 'images/person_2.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
+                <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore
+                  obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat
+                  unde.&rdquo;</p>
+              </blockquote>
+            
+              <p>&mdash; Rebecca Morando</p>
+            </div>
+      
+            <div class="testimony">
+              <blockquote>
+                <img src="{% static 'images/person_3.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
+                <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore
+                  obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat
+                  unde.&rdquo;</p>
+              </blockquote>
+            
+              <p>&mdash; Lucas Gallone</p>
+            </div>
+      
+            <div class="testimony">
+              <blockquote>
+                <img src="{% static 'images/person_4.jpg' %}" alt="Image" class="img-fluid w-25 mb-4 rounded-circle">
+                <p>&ldquo;Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo omnis voluptatem consectetur quam tempore
+                  obcaecati maiores voluptate aspernatur iusto eveniet, placeat ab quod tenetur ducimus. Minus ratione sit quaerat
+                  unde.&rdquo;</p>
+              </blockquote>
+            
+              <p>&mdash; Andrew Neel</p>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section bg-secondary bg-image" style="background-image: url('{% static 'images/bg_2.jpg' %}');">
+    <div class="container">
+      <div class="row align-items-stretch">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <a href="#" class="banner-1 h-100 d-flex" style="background-image: url('{% static 'images/bg_1.jpg' %}');">
+            <div class="banner-1-inner align-self-center">
+              <h2>Pharma Products</h2>
+              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <a href="#" class="banner-1 h-100 d-flex" style="background-image: url('{% static 'images/bg_2.jpg' %}');">
+            <div class="banner-1-inner ml-auto  align-self-center">
+              <h2>Rated by Experts</h2>
+              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function showContent(tabNumber) {
+      // Hide all content elements
+      const contents = document.querySelectorAll('.content');
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // Show the selected content
+      const selectedContent = document.getElementById(`content${tabNumber}`);
+      selectedContent.classList.add('active');
+
+      // Remove the active class from all tabs
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Add the active class to the selected tab
+      const selectedTab = document.querySelector(`.tab:nth-child(${tabNumber})`);
+      selectedTab.classList.add('active');
+    }
+
+
+    // Initialize the Places service
+    const placesService = new google.maps.places.PlacesService(document.createElement('div'));
+
+    // Set up the Autocomplete functionality for the input field
+    const input = document.getElementById('locationInput');
+    const autocomplete = new google.maps.places.Autocomplete(input);
+
+    // Handle the place_changed event when a user selects a location from the suggestions
+    autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+
+        // Display the selected location's details
+        if (place.geometry && place.geometry.location) {
+            const latitude = place.geometry.location.lat();
+            const longitude = place.geometry.location.lng();
+            const address = place.formatted_address;
+
+           
+        }
+    });
+
+    // Optional: Display the suggestion list based on user input
+    const suggestionList = document.getElementById('suggestionList');
+    input.addEventListener('input', () => {
+        const query = input.value;
+
+        // Use the Places service to fetch predictions for the input value
+        placesService.getQueryPredictions({ input: query }, (predictions, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                const suggestions = predictions.map(prediction => prediction.description);
+                const suggestionItems = suggestions.map(suggestion => `<div>${suggestion}</div>`);
+                suggestionList.innerHTML = suggestionItems.join('');
+            } else {
+                suggestionList.innerHTML = '';
+            }
+        });
+    });
+  </script>
+{% endblock content %}
